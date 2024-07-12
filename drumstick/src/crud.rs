@@ -14,7 +14,7 @@ impl RhythmStore {
         }
     }
 
-    pub fn create(&mut self, name: String, author: String) -> &Music {
+    pub fn create(&mut self, name: String, author: String) -> Music {
         let music = Music {
             id: self.next_id,
             name,
@@ -22,21 +22,20 @@ impl RhythmStore {
         };
         self.music.insert(self.next_id, music.clone());
         self.next_id += 1;
-        self.music.get(&music.id).unwrap()
+        music
     }
 
-    pub fn read(&self, id: u32) -> Option<&Music> {
-        self.music.get(&id)
-    }
+    // pub fn read(&self, id: u32) -> Option<&Music> {
+    //     self.music.get(&id)
+    // }
 
-    pub fn update(&mut self, id: u32, name: String, author: String) -> Option<&Music> {
+    pub fn update(&mut self, id: u32, name: String, author: String) -> Option<Music> {
         if let Some(music) = self.music.get_mut(&id) {
-            music.name = name;
-            music.author = author;
-            self.music.get(&id)
-        } else {
-            None
+            music.name = name.clone();
+            music.author = author.clone();
+            return Some(music.clone());
         }
+        None
     }
 
     pub fn delete(&mut self, id: u32) -> bool {
