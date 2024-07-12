@@ -1,8 +1,7 @@
 use crate::crud::RhythmStore;
-use crate::models::Music;
 use std::sync::{Arc, Mutex};
-use serde::{Deserialize, Serialize};
-use warp::{Filter, Rejection, Reply, http::StatusCode};
+use serde::Deserialize;
+use warp::{Filter, http::StatusCode};
 
 #[derive(Debug, Deserialize, Clone)]
 struct InputSong {
@@ -26,24 +25,37 @@ pub fn routes(
         .and(store.clone())
         .and_then(create_music);
 
-    // let update = warp::path!("oldmusic" / u32)
-    //     .and(warp::put())
-    //     .and(warp::body::json())
-    //     .and(store.clone())
-    //     .and_then(update_song);
+    let read = warp::path!("one" / u32)
+        .and(warp::get())
+        .and(store.clone())
+        .and_then(read_ein);
 
-    // let delete = warp::path!("binmusic" / u32)
-    //     .and(warp::delete())
-    //     .and(store.clone())
-    //     .and_then(delete_instance);
+    let update = warp::path!("oldmusic" / u32)
+        .and(warp::put())
+        .and(warp::body::json())
+        .and(store.clone())
+        .and_then(update_song);
 
-    list.or(create)
+    let delete = warp::path!("binmusic" / u32)
+        .and(warp::delete())
+        .and(store.clone())
+        .and_then(delete_instance);
+
+    list.or(create).or(delete).or(update).or(read)
 }
 
 async fn list_all_music(store: Arc<Mutex<RhythmStore>>) -> Result<impl warp::Reply, warp::Rejection> {
     let store = store.lock().unwrap();
     let music = store.list();
     Ok(warp::reply::json(&music))
+}
+
+async fn read_ein(id: u32, store: Arc<Mutex<RhythmStore>>) -> Result<impl warp::Reply, warp::Rejection> {
+    let store = store.lock().unwrap();
+    match store.read(id) {
+        Some(music) => Ok(warp::reply::with_status(warp::reply::json(&music), StatusCode::OK)),
+        None => Ok(warp::reply::with_status(warp::reply::json(&serde_json::json!({"error": "User not found"})), StatusCode::NOT_FOUND)),
+    }
 }
 
 async fn create_music(
@@ -55,26 +67,26 @@ async fn create_music(
     Ok(warp::reply::with_status(warp::reply::json(&input), StatusCode::CREATED))
 }
 
-// async fn update_song(
-//     id: u32,
-//     music: InputSong,
-//     store: Arc<Mutex<RhythmStore>>,
-// ) -> Result<impl warp::Reply, warp::Rejection> {
-//     let mut store = store.lock().unwrap();
-//     match store.update(id, music.name, music.author) {
-//         Some(music) => Ok(warp::reply::json(&music)),
-//         None => Ok(warp::reply::json({"error": "Music not found"})),
-//     }
-// }
+async fn update_song(
+    id: u32,
+    music: InputSong,
+    store: Arc<Mutex<RhythmStore>>,
+) -> Result<impl warp::Reply, warp::Rejection> {
+    let mut store = store.lock().unwrap();
+    match store.update(id, music.name, music.author) {
+        Some(music) => Ok(warp::reply::with_status(warp::reply::json(&music), StatusCode::OK)),
+        None => Ok(warp::reply::with_status(warp::reply::json(&serde_json::json!({"error": "music not found"})), StatusCode::NOT_FOUND)),
+    }
+}
 
-// async fn delete_instance(
-//     id: u32,
-//     store: Arc<Mutex<RhythmStore>>,
-// ) -> Result<impl warp::Reply, warp::Rejection> {
-//     let mut store = store.lock().unwrap();
-//     if store.delete(id) {
-//         Ok(warp::reply::json(&json!({"status": "Deleted"})))
-//     } else {
-//         Ok(warp::reply::json(&json!({"error": "not found"})))
-//     }
-// }
+async fn delete_instance(
+    id: u32,
+    store: Arc<Mutex<RhythmStore>>,
+) -> Result<impl warp::Reply, warp::Rejection> {
+    let mut store = store.lock().unwrap();
+    if store.delete(id) {
+        Ok(warp::reply::with_status(warp::reply::json(&serde_json::json!({"status": "Deleted"})), StatusCode::OK))
+    } else {
+        Ok(warp::reply::with_status(warp::reply::json(&serde_json::json!({"error": "Not found"})), StatusCode::NOT_FOUND))
+    }
+}

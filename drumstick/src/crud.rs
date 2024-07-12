@@ -25,9 +25,9 @@ impl RhythmStore {
         music
     }
 
-    // pub fn read(&self, id: u32) -> Option<&Music> {
-    //     self.music.get(&id)
-    // }
+    pub fn read(&self, id: u32) -> Option<&Music> {
+        self.music.get(&id)
+    }
 
     pub fn update(&mut self, id: u32, name: String, author: String) -> Option<Music> {
         if let Some(music) = self.music.get_mut(&id) {
