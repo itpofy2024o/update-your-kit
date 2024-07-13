@@ -2,6 +2,7 @@
 /no-gym-rat/test-gym/.gym-ai-venv/
 /zero-to-ein/.zerogo/
 /drumstick/target/
-/playing-drum/target/
+/counter/pkg/
+/counter/target/
 /light-to-lighting-rock/.lightvenv/
 .DS_Store
