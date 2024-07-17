@@ -4,5 +4,6 @@
 /drumstick/target/
 /lepcounter/pkg/
 /lepcounter/target/
+/tf-cv-rum-drop/.kokl/
 /light-to-lighting-rock/.lightvenv/
 .DS_Store
