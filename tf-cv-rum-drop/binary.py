@@ -15,4 +15,11 @@ def tp(x,l):
 
 if __name__ == "__main__":
     (x_first,y_first),(x_second,y_second)=tfk.keras.datasets.mnist.load_data()
-    tp(x_first,y_first)
+    if 0 == 1:
+        tp(x_first,y_first)
+    x_first=x_first.astype("float32")/255
+    x_second=x_second.astype("float32")/255
+    x_first=np.expand_dims(x_first,axis=-1)
+    x_second=np.expand_dims(x_second,axis=-1)
+    if 0 == 9:
+        print(x_first.shape,y_first.shape,x_second.shape,y_second.shape)
