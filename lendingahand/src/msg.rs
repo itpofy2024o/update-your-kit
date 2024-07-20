@@ -18,11 +18,24 @@ pub enum ExecuteMsg {
 pub enum QueryMsg {
     // GetCount returns the current count as a json-encoded number
     #[returns(GetCountResponse)]
+    #[returns(GetFlipResponse)]
     GetCount {},
+    GetFlip {},
 }
 
 // We define a custom struct for each query response
 #[cw_serde]
 pub struct GetCountResponse {
+    pub count: i32,
+}
+
+#[cw_serde]
+pub struct GetFlipResponse {
+    pub table: bool,
+}
+
+#[cw_serde]
+pub struct GetStateResponse {
+    pub table: bool,
     pub count: i32,
 }
