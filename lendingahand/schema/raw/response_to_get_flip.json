@@ -1,16 +1,11 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "InstantiateMsg",
+  "title": "GetFlipResponse",
   "type": "object",
   "required": [
-    "count",
     "table"
   ],
   "properties": {
-    "count": {
-      "type": "integer",
-      "format": "int32"
-    },
     "table": {
       "type": "boolean"
     }

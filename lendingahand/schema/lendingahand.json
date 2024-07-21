@@ -7,12 +7,16 @@
     "title": "InstantiateMsg",
     "type": "object",
     "required": [
-      "count"
+      "count",
+      "table"
     ],
     "properties": {
       "count": {
         "type": "integer",
         "format": "int32"
+      },
+      "table": {
+        "type": "boolean"
       }
     },
     "additionalProperties": false
@@ -37,18 +41,35 @@
       {
         "type": "object",
         "required": [
+          "flip_table"
+        ],
+        "properties": {
+          "flip_table": {
+            "type": "object",
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      {
+        "type": "object",
+        "required": [
           "reset"
         ],
         "properties": {
           "reset": {
             "type": "object",
             "required": [
-              "count"
+              "count",
+              "table"
             ],
             "properties": {
               "count": {
                 "type": "integer",
                 "format": "int32"
+              },
+              "table": {
+                "type": "boolean"
               }
             },
             "additionalProperties": false
@@ -74,6 +95,19 @@
           }
         },
         "additionalProperties": false
+      },
+      {
+        "type": "object",
+        "required": [
+          "get_flip"
+        ],
+        "properties": {
+          "get_flip": {
+            "type": "object",
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
       }
     ]
   },
@@ -91,6 +125,20 @@
         "count": {
           "type": "integer",
           "format": "int32"
+        }
+      },
+      "additionalProperties": false
+    },
+    "get_flip": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "GetFlipResponse",
+      "type": "object",
+      "required": [
+        "table"
+      ],
+      "properties": {
+        "table": {
+          "type": "boolean"
         }
       },
       "additionalProperties": false

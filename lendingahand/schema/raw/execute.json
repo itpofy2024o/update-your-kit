@@ -18,18 +18,35 @@
     {
       "type": "object",
       "required": [
+        "flip_table"
+      ],
+      "properties": {
+        "flip_table": {
+          "type": "object",
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
         "reset"
       ],
       "properties": {
         "reset": {
           "type": "object",
           "required": [
-            "count"
+            "count",
+            "table"
           ],
           "properties": {
             "count": {
               "type": "integer",
               "format": "int32"
+            },
+            "table": {
+              "type": "boolean"
             }
           },
           "additionalProperties": false

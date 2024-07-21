@@ -1,0 +1,10 @@
+/home/water/Documents/GitHub/update-your-kit/jace-in-winter/target/debug/deps/libautocfg-affd9930e9057465.rmeta: /home/water/.cargo/registry/src/index.crates.io-6f17d22bba15001f/autocfg-1.3.0/src/lib.rs /home/water/.cargo/registry/src/index.crates.io-6f17d22bba15001f/autocfg-1.3.0/src/error.rs /home/water/.cargo/registry/src/index.crates.io-6f17d22bba15001f/autocfg-1.3.0/src/rustc.rs /home/water/.cargo/registry/src/index.crates.io-6f17d22bba15001f/autocfg-1.3.0/src/version.rs
+
+/home/water/Documents/GitHub/update-your-kit/jace-in-winter/target/debug/deps/libautocfg-affd9930e9057465.rlib: /home/water/.cargo/registry/src/index.crates.io-6f17d22bba15001f/autocfg-1.3.0/src/lib.rs /home/water/.cargo/registry/src/index.crates.io-6f17d22bba15001f/autocfg-1.3.0/src/error.rs /home/water/.cargo/registry/src/index.crates.io-6f17d22bba15001f/autocfg-1.3.0/src/rustc.rs /home/water/.cargo/registry/src/index.crates.io-6f17d22bba15001f/autocfg-1.3.0/src/version.rs
+
+/home/water/Documents/GitHub/update-your-kit/jace-in-winter/target/debug/deps/autocfg-affd9930e9057465.d: /home/water/.cargo/registry/src/index.crates.io-6f17d22bba15001f/autocfg-1.3.0/src/lib.rs /home/water/.cargo/registry/src/index.crates.io-6f17d22bba15001f/autocfg-1.3.0/src/error.rs /home/water/.cargo/registry/src/index.crates.io-6f17d22bba15001f/autocfg-1.3.0/src/rustc.rs /home/water/.cargo/registry/src/index.crates.io-6f17d22bba15001f/autocfg-1.3.0/src/version.rs
+
+/home/water/.cargo/registry/src/index.crates.io-6f17d22bba15001f/autocfg-1.3.0/src/lib.rs:
+/home/water/.cargo/registry/src/index.crates.io-6f17d22bba15001f/autocfg-1.3.0/src/error.rs:
+/home/water/.cargo/registry/src/index.crates.io-6f17d22bba15001f/autocfg-1.3.0/src/rustc.rs:
+/home/water/.cargo/registry/src/index.crates.io-6f17d22bba15001f/autocfg-1.3.0/src/version.rs:

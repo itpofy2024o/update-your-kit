@@ -4,7 +4,7 @@ use cosmwasm_std::{to_json_binary, Binary, Deps, DepsMut, Env, MessageInfo, Resp
 use cw2::set_contract_version;
 
 use crate::error::ContractError;
-use crate::msg::{ExecuteMsg, GetCountResponse, InstantiateMsg, QueryMsg};
+use crate::msg::{ExecuteMsg, GetCountResponse, InstantiateMsg, QueryMsg,GetFlipResponse};
 use crate::state::{State, STATE};
 
 // version info for migration info
@@ -30,7 +30,8 @@ pub fn instantiate(
     Ok(Response::new()
         .add_attribute("method", "instantiate")
         .add_attribute("owner", info.sender)
-        .add_attribute("count", msg.count.to_string()))
+        .add_attribute("count", msg.count.to_string())
+        .add_attribute("count", msg.table.to_string()))
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
@@ -42,6 +43,7 @@ pub fn execute(
 ) -> Result<Response, ContractError> {
     match msg {
         ExecuteMsg::Increment {} => execute::increment(deps),
+        ExecuteMsg::FlipTable {} => execute::flipping(deps),
         ExecuteMsg::Reset { count,table } => execute::reset(deps, info, count,table),
     }
 }
@@ -56,6 +58,15 @@ pub mod execute {
         })?;
 
         Ok(Response::new().add_attribute("action", "increment"))
+    }
+
+    pub fn flipping(deps: DepsMut) -> Result<Response, ContractError> {
+        STATE.update(deps.storage, |mut state| -> Result<_, ContractError> {
+            state.table = !state.table;
+            Ok(state)
+        })?;
+
+        Ok(Response::new().add_attribute("action", "flipping"))
     }
 
     pub fn reset(deps: DepsMut, info: MessageInfo, count: i32,table:bool) -> Result<Response, ContractError> {
@@ -75,6 +86,7 @@ pub mod execute {
 pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
         QueryMsg::GetCount {} => to_json_binary(&query::count(deps)?),
+        QueryMsg::GetFlip {} => to_json_binary(&query::tf(deps)?),
     }
 }
 
@@ -84,6 +96,11 @@ pub mod query {
     pub fn count(deps: Deps) -> StdResult<GetCountResponse> {
         let state = STATE.load(deps.storage)?;
         Ok(GetCountResponse { count: state.count })
+    }
+
+    pub fn tf(deps: Deps) -> StdResult<GetFlipResponse> {
+        let state = STATE.load(deps.storage)?;
+        Ok(GetFlipResponse { table: state.table })
     }
 }
 

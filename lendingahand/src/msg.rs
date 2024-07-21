@@ -18,8 +18,8 @@ pub enum ExecuteMsg {
 pub enum QueryMsg {
     // GetCount returns the current count as a json-encoded number
     #[returns(GetCountResponse)]
-    #[returns(GetFlipResponse)]
     GetCount {},
+    #[returns(GetFlipResponse)]
     GetFlip {},
 }
 
