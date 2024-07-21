@@ -107,15 +107,15 @@ pub mod query {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use cosmwasm_std::testing::{mock_dependencies, mock_env, mock_info};
-    use cosmwasm_std::{coins, from_json};
+    use cosmwasm_std::testing::{mock_dependencies, mock_env, message_info};
+    use cosmwasm_std::{coins, from_json, Addr};
 
     #[test]
     fn proper_initialization() {
         let mut deps = mock_dependencies();
 
-        let msg = InstantiateMsg { count: 17 };
-        let info = mock_info("creator", &coins(1000, "earth"));
+        let msg = InstantiateMsg { count: 0, table: false };
+        let info = message_info(&Addr::from(Addr::unchecked("creator")), &coins(1000, "earth"));
 
         // we can just call .unwrap() to assert this was a success
         let res = instantiate(deps.as_mut(), mock_env(), info, msg).unwrap();
@@ -131,12 +131,12 @@ mod tests {
     fn increment() {
         let mut deps = mock_dependencies();
 
-        let msg = InstantiateMsg { count: 17 };
-        let info = mock_info("creator", &coins(2, "token"));
+        let msg = InstantiateMsg { count: 17, table:false };
+        let info = message_info(&Addr::from(Addr::unchecked("creator")), &coins(2, "token"));
         let _res = instantiate(deps.as_mut(), mock_env(), info, msg).unwrap();
 
         // beneficiary can release it
-        let info = mock_info("anyone", &coins(2, "token"));
+        let info = message_info(&Addr::from(Addr::unchecked("anyone")), &coins(2, "token"));
         let msg = ExecuteMsg::Increment {};
         let _res = execute(deps.as_mut(), mock_env(), info, msg).unwrap();
 
@@ -150,13 +150,13 @@ mod tests {
     fn reset() {
         let mut deps = mock_dependencies();
 
-        let msg = InstantiateMsg { count: 17 };
-        let info = mock_info("creator", &coins(2, "token"));
+        let msg = InstantiateMsg { count: 17,table:false };
+        let info = message_info(&Addr::from(Addr::unchecked("creator")), &coins(2, "token"));
         let _res = instantiate(deps.as_mut(), mock_env(), info, msg).unwrap();
 
         // beneficiary can release it
-        let unauth_info = mock_info("anyone", &coins(2, "token"));
-        let msg = ExecuteMsg::Reset { count: 5 };
+        let unauth_info = message_info(&Addr::from(Addr::unchecked("anyone")), &coins(2, "token"));
+        let msg = ExecuteMsg::Reset { count: 5, table: false };
         let res = execute(deps.as_mut(), mock_env(), unauth_info, msg);
         match res {
             Err(ContractError::Unauthorized {}) => {}
@@ -164,8 +164,8 @@ mod tests {
         }
 
         // only the original creator can reset the counter
-        let auth_info = mock_info("creator", &coins(2, "token"));
-        let msg = ExecuteMsg::Reset { count: 5 };
+        let auth_info = message_info(&Addr::from(Addr::unchecked("creator")), &coins(2, "token"));
+        let msg = ExecuteMsg::Reset { count: 5 ,table: false};
         let _res = execute(deps.as_mut(), mock_env(), auth_info, msg).unwrap();
 
         // should now be 5

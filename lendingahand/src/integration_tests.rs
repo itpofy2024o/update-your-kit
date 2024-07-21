@@ -45,7 +45,7 @@ mod tests {
             Uint128::new(1)
         );
 
-        let msg = InstantiateMsg { count: 1i32 };
+        let msg = InstantiateMsg { count: 1i32,table:false };
         let cw_template_contract_addr = app
             .instantiate_contract(
                 cw_template_id,
