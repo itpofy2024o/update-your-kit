@@ -20,6 +20,8 @@ pub fn instantiate(
 ) -> Result<Response, ContractError> {
     let state = State {
         count: msg.count,
+        table: msg.table,
+        receiver: info.sender.clone(),
         owner: info.sender.clone(),
     };
     set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
@@ -40,7 +42,7 @@ pub fn execute(
 ) -> Result<Response, ContractError> {
     match msg {
         ExecuteMsg::Increment {} => execute::increment(deps),
-        ExecuteMsg::Reset { count } => execute::reset(deps, info, count),
+        ExecuteMsg::Reset { count,table } => execute::reset(deps, info, count,table),
     }
 }
 
@@ -56,12 +58,13 @@ pub mod execute {
         Ok(Response::new().add_attribute("action", "increment"))
     }
 
-    pub fn reset(deps: DepsMut, info: MessageInfo, count: i32) -> Result<Response, ContractError> {
+    pub fn reset(deps: DepsMut, info: MessageInfo, count: i32,table:bool) -> Result<Response, ContractError> {
         STATE.update(deps.storage, |mut state| -> Result<_, ContractError> {
             if info.sender != state.owner {
                 return Err(ContractError::Unauthorized {});
             }
             state.count = count;
+            state.table = table;
             Ok(state)
         })?;
         Ok(Response::new().add_attribute("action", "reset"))
