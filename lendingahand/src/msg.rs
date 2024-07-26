@@ -16,7 +16,7 @@ pub enum ExecuteMsg {
 #[cw_serde]
 #[derive(QueryResponses)]
 pub enum QueryMsg {
-    // GetCount returns the current count as a json-encoded number
+    // a json-encoded number
     #[returns(GetCountResponse)]
     GetCount {},
     #[returns(GetFlipResponse)]
@@ -34,7 +34,7 @@ pub struct GetFlipResponse {
     pub table: bool,
 }
 
-#[cw_serde]
+#[cw_serde] // not recommended
 pub struct GetStateResponse {
     pub table: bool,
     pub count: i32,

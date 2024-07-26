@@ -6,7 +6,7 @@ use cosmwasm_std::{
     WasmQuery,
 };
 
-use crate::msg::{ExecuteMsg, GetCountResponse, QueryMsg};
+use crate::msg::{ExecuteMsg, GetCountResponse, GetFlipResponse, QueryMsg};
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, Eq, JsonSchema)]
 pub struct CwTemplateContract(pub Addr);
@@ -40,6 +40,22 @@ impl CwTemplateContract {
         }
         .into();
         let res: GetCountResponse = QuerierWrapper::<CQ>::new(querier).query(&query)?;
+        Ok(res)
+    }
+
+    pub fn flip<Q, T, CQ>(&self, querier: &Q) -> StdResult<GetFlipResponse>
+    where
+        Q: Querier,
+        T: Into<String>,
+        CQ: CustomQuery,
+    {
+        let msg = QueryMsg::GetFlip {};
+        let query = WasmQuery::Smart {
+            contract_addr: self.addr().into(),
+            msg: to_json_binary(&msg)?,
+        }
+        .into();
+        let res: GetFlipResponse = QuerierWrapper::<CQ>::new(querier).query(&query)?;
         Ok(res)
     }
 }

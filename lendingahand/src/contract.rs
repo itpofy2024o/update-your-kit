@@ -7,7 +7,6 @@ use crate::error::ContractError;
 use crate::msg::{ExecuteMsg, GetCountResponse, InstantiateMsg, QueryMsg,GetFlipResponse};
 use crate::state::{State, STATE};
 
-// version info for migration info
 const CONTRACT_NAME: &str = "crates.io:lendingahand";
 const CONTRACT_VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -30,8 +29,9 @@ pub fn instantiate(
     Ok(Response::new()
         .add_attribute("method", "instantiate")
         .add_attribute("owner", info.sender)
+        .add_attribute("receiver", "")
         .add_attribute("count", msg.count.to_string())
-        .add_attribute("count", msg.table.to_string()))
+        .add_attribute("table", msg.table.to_string()))
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]
@@ -44,7 +44,7 @@ pub fn execute(
     match msg {
         ExecuteMsg::Increment {} => execute::increment(deps),
         ExecuteMsg::FlipTable {} => execute::flipping(deps),
-        ExecuteMsg::Reset { count,table } => execute::reset(deps, info, count,table),
+        ExecuteMsg::Reset { count,table } => execute::reset(deps, info, count, table),
     }
 }
 
@@ -66,7 +66,7 @@ pub mod execute {
             Ok(state)
         })?;
 
-        Ok(Response::new().add_attribute("action", "flipping"))
+        Ok(Response::new().add_attribute("action", "flip"))
     }
 
     pub fn reset(deps: DepsMut, info: MessageInfo, count: i32,table:bool) -> Result<Response, ContractError> {
@@ -117,11 +117,9 @@ mod tests {
         let msg = InstantiateMsg { count: 0, table: false };
         let info = message_info(&Addr::from(Addr::unchecked("creator")), &coins(1000, "earth"));
 
-        // we can just call .unwrap() to assert this was a success
         let res = instantiate(deps.as_mut(), mock_env(), info, msg).unwrap();
         assert_eq!(0, res.messages.len());
 
-        // it worked, let's query the state
         let res = query(deps.as_ref(), mock_env(), QueryMsg::GetCount {}).unwrap();
         let value: GetCountResponse = from_json(&res).unwrap();
         assert_eq!(17, value.count);
@@ -135,15 +133,30 @@ mod tests {
         let info = message_info(&Addr::from(Addr::unchecked("creator")), &coins(2, "token"));
         let _res = instantiate(deps.as_mut(), mock_env(), info, msg).unwrap();
 
-        // beneficiary can release it
         let info = message_info(&Addr::from(Addr::unchecked("anyone")), &coins(2, "token"));
         let msg = ExecuteMsg::Increment {};
         let _res = execute(deps.as_mut(), mock_env(), info, msg).unwrap();
 
-        // should increase counter by 1
         let res = query(deps.as_ref(), mock_env(), QueryMsg::GetCount {}).unwrap();
         let value: GetCountResponse = from_json(&res).unwrap();
         assert_eq!(18, value.count);
+    }
+
+    #[test]
+    fn flipping() {
+        let mut deps = mock_dependencies();
+
+        let msg = InstantiateMsg { count: 17, table:false };
+        let info = message_info(&Addr::from(Addr::unchecked("creator")), &coins(2, "token"));
+        let _res = instantiate(deps.as_mut(), mock_env(), info, msg).unwrap();
+
+        let info = message_info(&Addr::from(Addr::unchecked("anyone")), &coins(2, "token"));
+        let msg = ExecuteMsg::FlipTable {};
+        let _res = execute(deps.as_mut(), mock_env(), info, msg).unwrap();
+
+        let res = query(deps.as_ref(), mock_env(), QueryMsg::GetFlip {}).unwrap();
+        let value: GetFlipResponse = from_json(&res).unwrap();
+        assert_eq!(false, value.table);
     }
 
     #[test]
@@ -154,7 +167,6 @@ mod tests {
         let info = message_info(&Addr::from(Addr::unchecked("creator")), &coins(2, "token"));
         let _res = instantiate(deps.as_mut(), mock_env(), info, msg).unwrap();
 
-        // beneficiary can release it
         let unauth_info = message_info(&Addr::from(Addr::unchecked("anyone")), &coins(2, "token"));
         let msg = ExecuteMsg::Reset { count: 5, table: false };
         let res = execute(deps.as_mut(), mock_env(), unauth_info, msg);
@@ -163,12 +175,10 @@ mod tests {
             _ => panic!("Must return unauthorized error"),
         }
 
-        // only the original creator can reset the counter
         let auth_info = message_info(&Addr::from(Addr::unchecked("creator")), &coins(2, "token"));
         let msg = ExecuteMsg::Reset { count: 5 ,table: false};
         let _res = execute(deps.as_mut(), mock_env(), auth_info, msg).unwrap();
 
-        // should now be 5
         let res = query(deps.as_ref(), mock_env(), QueryMsg::GetCount {}).unwrap();
         let value: GetCountResponse = from_json(&res).unwrap();
         assert_eq!(5, value.count);
