@@ -1,8 +1,8 @@
 use yew::prelude::*;
 use gloo::timers::callback::Timeout;
 
-#[function_component(Landing)]
-pub fn landing() -> Html {
+#[function_component]
+pub fn Landing() -> Html {
     let fade_in = use_state(|| false);
 
     {
