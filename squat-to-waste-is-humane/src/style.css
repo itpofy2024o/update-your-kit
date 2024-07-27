@@ -1,0 +1,18 @@
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+.landing, .contact, .products, .about, .roadmap {
+    animation: fadeinout 3s ease-in-out infinite;
+    text-align: center;
+    padding: 50px;
+}
+
+@keyframes fadeinout {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
