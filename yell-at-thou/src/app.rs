@@ -1,6 +1,6 @@
 use yew::prelude::*;
 use yew_router::prelude::*;
-crate::pages::landing_page::LandingPage;
+use crate::pages::landing::LandingPage;
 
 #[derive(Routable, PartialEq, Clone, Debug)]
 enum Route {
