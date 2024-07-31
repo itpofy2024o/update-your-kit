@@ -11,3 +11,8 @@
 1. Mostly Entertainment
 2. Gambling
 3. Dishonor Motives and Action
+
+
+## P
+- jace
+- lending

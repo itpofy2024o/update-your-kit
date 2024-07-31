@@ -1,15 +1,13 @@
 use yew::prelude::*;
-use yew::services::timeout::{TimeoutService, TimeoutTask};
-use gloo::storage::{Storage, LocalStorage};
-use gloo::storage::errors::StorageError;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 use web_sys::HtmlElement;
+use yew_assets::Assets;
 
-const ANIMATION_DURATION: i32 = 3500;
+const ANIMATION_DURATION: i32 = 3500; 
 
-#[function_component(Animation)]
-fn animation() -> Html {
+#[function_component]
+pub fn Animation() -> Html {
     let node_ref = use_node_ref();
     let animation_done = use_state(|| false);
 
@@ -49,32 +47,9 @@ fn animation() -> Html {
         );
     }
 
-    let svg_content = include_str!("../zyx.svg");
-
     html! {
         <div>
-            { yew::virtual_dom::VNode::VRef(svg_content.into()) }
+            <img ref={node_ref} src="/zyx.svg" alt="cat animation" />
         </div>
-    }
-}
-
-#[function_component(Home)]
-fn home() -> Html {
-    let has_animated = {
-        LocalStorage::get("has_animated").unwrap_or(false)
-    };
-
-    if !has_animated {
-        LocalStorage::set("has_animated", true).unwrap();
-    }
-
-    html! {
-        <>
-            { if !has_animated {
-                html! { <Animation /> }
-            } else {
-                html! { <div>{ "Home Page Content" }</div> }
-            }}
-        </>
     }
 }

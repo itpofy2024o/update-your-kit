@@ -8,12 +8,16 @@ enum Route {
     Landing,
     // #[at("/products")]
     // Goods,
+    #[not_found]
+    #[at("/404")]
+    NotFound,
 }
 
 fn switches(routes: Route) -> Html {
     match routes {
         Route::Landing => html! { <LandingPage /> },
         // Route::Goods => html! { <GoodsPage /> },
+        Route::NotFound => html! { <h1>{ "404" }</h1> },
     }
 }
 
