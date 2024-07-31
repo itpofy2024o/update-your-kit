@@ -1,6 +1,7 @@
 use dioxus::prelude::*;
-use crate::app;
+mod app;
+use dioxus_desktop::Config;
 
 fn main() {
-    dioxus::desktop::launch(app::app);
+    dioxus_desktop::launch_with_props(app::app, (), Config::default());
 }
