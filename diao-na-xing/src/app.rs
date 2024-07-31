@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
-mod splash;
-mod crud;
+use crate::splash;
+use crate::crud;
 
 #[derive(PartialEq, Props)]
 struct AppState {

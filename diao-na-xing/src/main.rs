@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-mod app;
+use crate::app;
 
 fn main() {
     dioxus::desktop::launch(app::app);
