@@ -1,0 +1,39 @@
+############
+# A make file for cargo-make, please install it with:
+#     cargo install --force cargo-make
+############
+
+[env]
+CARGO_MAKE_EXTEND_WORKSPACE_MAKEFILE = true
+
+[tasks.check-stable]
+workspace = false
+clear = true
+dependencies = [
+	{ name = "check", path = "examples/counter_without_macros" },
+	{ name = "check", path = "examples/counters_stable" },
+]
+
+[tasks.ci-examples]
+workspace = false
+cwd = "examples"
+command = "cargo"
+args = ["make", "ci-clean"]
+
+[tasks.check-examples]
+workspace = false
+cwd = "examples"
+command = "cargo"
+args = ["make", "check-clean"]
+
+[tasks.build-examples]
+workspace = false
+cwd = "examples"
+command = "cargo"
+args = ["make", "build-clean"]
+
+[tasks.clean-examples]
+workspace = false
+cwd = "examples"
+command = "cargo"
+args = ["make", "clean"]
